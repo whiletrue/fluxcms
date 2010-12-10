@@ -136,11 +136,11 @@ function startPhing() {
     
      
     Phing::setProperty("BxRootDir",rootDir()."/");
-    if (extension_loaded("mysqli")) {
-        Phing::setProperty("database.type","mysqli");
-    } else {
+    //if (extension_loaded("mysqli")) {
+    //    Phing::setProperty("database.type","mysqli");
+    //} else {
         Phing::setProperty("database.type","mysql");
-    }
+    //}
     
     //Phing::setProperty("database.prefix", $_POST['database_prefix'].'live__');
     Phing::setProperty("replacePhpInHtaccess", function_exists("apache_get_modules") ? "php_" : "#php_");
