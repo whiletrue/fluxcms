@@ -71,13 +71,21 @@ class bx_plugins_gallery extends bx_plugin {
         $options['mode'] = 'page';
         $dom = new domDocument();
         $drivers = array();
+        
+        $userdriver = $this->getParameter($path, 'driver');
+        if (null !== $userdriver) {
+            $driverClass = __CLASS__."_".$userdriver;
+            if (class_exists($driverClass)) {
+                $drivers[] = call_user_func(array($driverClass, 'getInstance'), $dom, $path, $id);
+            }
+        }
+        
         if ($flickrParams = $this->getParameterAll($path,"flickr")) {
             if ($f = bx_plugins_gallery_flickr::getInstance($dom,$path,$id,$flickrParams)) {
               $drivers[] = $f; 
             }
         }
         if (count($drivers) == 0) {
-        
             $drivers[] = bx_plugins_gallery_file::getInstance($dom,$path,$id);
         }
         
@@ -89,7 +97,6 @@ class bx_plugins_gallery extends bx_plugin {
         ($this->getParameter($path, "descriptionInOverview") == "true") ? $options['descriptionInOverview'] = true : $options['descriptionInOverview'] = false;
         
         ($this->getParameter($path, "titleInOverview") == "true") ? $options['titleInOverview'] = true : $options['titleInOverview'] = false;
-        
         
         $dirInfo = pathinfo($id);
         if($dirInfo['dirname'] != '.') {
